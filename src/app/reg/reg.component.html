@@ -1,0 +1,74 @@
+<form
+    class="w-fit h-fit border border-neutral-200 rounded-lg shadow px-6 py-3 m-8"
+    [formGroup]="regForm"
+    (ngSubmit)="submitReg()"
+>
+    <div class="prose flex flex-col gap-3 prose-headings:my-3">
+        <h1 class="text-center">Register</h1>
+        <label for="username">
+            <span>Username</span>
+            <input
+                type="text"
+                class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+                placeholder="AwesomeUsername"
+                formControlName="username"
+            />
+            <p
+                *ngIf="
+                    regForm.controls['username'].errors &&
+                    regForm.controls['username'].dirty
+                "
+                class="not-prose input_error"
+            >
+                Username must be at least
+                {{
+                    regForm.controls["username"].getError("minlength")
+                        ?.requiredLength || "6"
+                }}
+                characters long!
+            </p>
+        </label>
+        <label for="email">
+            <span>Email</span>
+            <input
+                type="email"
+                class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+                placeholder="urmail@domain.ex"
+                formControlName="email"
+            />
+            <p
+                *ngIf="
+                    regForm.controls['email'].errors &&
+                    regForm.controls['email'].dirty
+                "
+                class="not-prose input_error"
+            >
+                Incorrect email!
+            </p>
+        </label>
+        <label for="password" class="flex flex-col">
+            <span>Password</span>
+            <input
+                type="password"
+                class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+                placeholder="Password"
+                formControlName="password"
+            />
+            <input
+                type="password"
+                class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+                placeholder="Confirm password"
+                formControlName="passConfirm"
+            />
+            <p
+                *ngIf="regForm.errors?.['passwordsMismatch']"
+                class="not-prose input_error"
+            >
+                Passwords do not match!
+            </p>
+        </label>
+        <button type="submit" class="submit_button" [disabled]="!regForm.valid">
+            {{ regForm.valid ? "Register!" : "Complete the form first!" }}
+        </button>
+    </div>
+</form>
