@@ -1,0 +1,6 @@
+.menulist > li:not(:last-child)::after {
+    display: block;
+    width: 1px;
+    height: 100%;
+    background-color: rgb(18, 18, 18);
+}

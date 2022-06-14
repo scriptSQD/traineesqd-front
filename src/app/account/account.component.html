@@ -1,0 +1,116 @@
+<ng-container *ngIf="this.as.isAuth$ | async">
+    <div
+        class="prose flex flex-col items-center justify-center gap-2"
+        *ngIf="this.as.user$ | async as user"
+    >
+        <h1 class="my-1">Hello, {{ user.username }}</h1>
+        <p
+            *ngIf="!user.hasTwoFa"
+            class="text-orange-600 bg-gray-50 border border-gray-300 rounded-md px-3 py-2 max-w-[46ch]"
+        >
+            Warning! You seem to have to 2FA disabled! This puts your account
+            security at risk. Follow the instructions below to enable 2FA.
+        </p>
+
+        <details
+            class="flex flex-col w-full border border-gray-300 rounded-lg max-w-[36ch] overflow-hidden"
+        >
+            <summary
+                class="bg-gray-100 rounded-t px-2 py-1 select-none cursor-pointer"
+            >
+                2FA Status
+            </summary>
+            <div class="flex flex-col prose-p:my-1 p-2">
+                <p
+                    class="font-semibold"
+                    [ngClass]="{
+                        'text-green-600': user.hasTwoFa,
+                        'text-rose-600': !user.hasTwoFa
+                    }"
+                >
+                    2FA: {{ user.hasTwoFa ? "Enabled" : "Disabled" }}.
+                </p>
+                <p>
+                    2FA helps protect your account by requiring an additional
+                    code to login.<br />Despite that, you can still skip
+                    registering 2FA, or disable it at any time on this page
+                    (feature coming soon).
+                </p>
+            </div>
+        </details>
+
+        <details
+            class="group flex flex-col w-full p-2 border border-gray-300 rounded-lg"
+            *ngIf="!user.hasTwoFa"
+        >
+            <summary
+                class="bg-gray-100 rounded px-2 py-1 group-open:marker:rotate-90 marker:transition-all"
+            >
+                Enable 2FA
+            </summary>
+            <div
+                class="w-full h-full flex flex-col items-center justify-center my-2"
+                [ngClass]="{ hidden: (requestingQr | async) }"
+            >
+                <button
+                    *ngIf="!qrRendered"
+                    (click)="requestQrCode()"
+                    class="px-3 py-1.5 border border-gray-200 rounded-lg max-w-[24ch] my-1"
+                >
+                    Click here, to request a QR for Authenticator app.
+                </button>
+                <canvas
+                    id="qrCanvas"
+                    [ngClass]="{
+                        hidden: !qrRendered
+                    }"
+                ></canvas>
+                <form *ngIf="qrRendered" class="flex flex-col items-center">
+                    <label for="totp">
+                        TOTP Code
+                        <input
+                            id="totp"
+                            type="text"
+                            placeholder="TOTP Code"
+                            class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+                            [formControl]="totpCodeControl"
+                        />
+                    </label>
+                    <button
+                        type="button"
+                        class="submit_button"
+                        [disabled]="!totpCodeControl.valid"
+                        (click)="totpSubmitted()"
+                    >
+                        {{
+                            totpCodeControl.valid
+                                ? "Enable!"
+                                : "Enter valid TOTP code!"
+                        }}
+                    </button>
+                </form>
+            </div>
+            <span
+                *ngIf="requestingQr | async"
+                class="flex flex-col gap-2 items-center justify-center"
+            >
+                <div
+                    class="w-10 h-10 bg-transparent border-[6px] border-gray-300 border-t-gray-800 animate-spin rounded-full"
+                ></div>
+                Requesting QR Code...
+            </span>
+            <p
+                *ngIf="twoFaRegSuccess !== null && twoFaRegSuccess"
+                class="text-green-600 text-center my-1 font-medium"
+            >
+                2FA has been enabled! The page will now be refreshed.
+            </p>
+            <p
+                *ngIf="regErrors"
+                class="text-center my-1 text-rose-600 font-medium"
+            >
+                {{ regErrors }}
+            </p>
+        </details>
+    </div>
+</ng-container>

@@ -3,8 +3,14 @@
     [formGroup]="regForm"
     (ngSubmit)="submitReg()"
 >
-    <div class="prose flex flex-col gap-3 prose-headings:my-3">
-        <h1 class="text-center">Register</h1>
+    <div class="prose flex flex-col gap-3">
+        <div class="flex flex-col gap-2 my-3">
+            <h1 class="text-center m-0">Register</h1>
+            <p class="max-w-[38ch] m-0">
+                Working with TraineeSQD is the best experience if you're
+                registered and have access to all features!
+            </p>
+        </div>
         <label for="username">
             <span>Username</span>
             <input
@@ -15,7 +21,7 @@
             />
             <p
                 *ngIf="
-                    regForm.controls['username'].errors &&
+                    regForm.controls['username'].getError('minlength') &&
                     regForm.controls['username'].dirty
                 "
                 class="not-prose input_error"
@@ -27,6 +33,19 @@
                 }}
                 characters long!
             </p>
+            <p
+                *ngIf="
+                    regForm.controls['username'].getError(
+                        'uniqueValueAlreadyTaken'
+                    )
+                "
+                class="text-sm font-light m-0 text-rose-600"
+            >
+                Username already taken!
+            </p>
+            <ValidationIndicator
+                [vi-control]="regForm.controls['username']"
+            ></ValidationIndicator>
         </label>
         <label for="email">
             <span>Email</span>
@@ -36,15 +55,19 @@
                 placeholder="urmail@domain.ex"
                 formControlName="email"
             />
-            <p
-                *ngIf="
-                    regForm.controls['email'].errors &&
-                    regForm.controls['email'].dirty
-                "
-                class="not-prose input_error"
+            <FormValidationHandler
+                [fvh-control]="regForm.controls['email']"
+                fvh-check-for-error="email"
+            ></FormValidationHandler>
+            <FormValidationHandler
+                [fvh-control]="regForm.controls['email']"
+                fvh-check-for-error="uniqueValueAlreadyTaken"
+                fvh-error-msg="Email already taken!"
             >
-                Incorrect email!
-            </p>
+            </FormValidationHandler>
+            <ValidationIndicator
+                [vi-control]="regForm.controls['email']"
+            ></ValidationIndicator>
         </label>
         <label for="password" class="flex flex-col">
             <span>Password</span>
@@ -72,3 +95,9 @@
         </button>
     </div>
 </form>
+<span *ngIf="regSubmissionInProcess | async" class="flex gap-2">
+    <div
+        class="w-8 h-8 bg-transparent border-4 border-gray-300 border-t-gray-800 animate-spin rounded-full"
+    ></div>
+    Processing registration...
+</span>

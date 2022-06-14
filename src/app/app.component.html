@@ -1,9 +1,29 @@
 <header class="sticky top-0 w-full bg-white shadow mb-4">
-    <nav class="flex mx-3 py-2 justify-between">
+    <nav class="flex mx-3 py-2 justify-between items-center">
         <a routerLink="/home" class="font-bold text-xl">Home</a>
-        <ul>
+        <ng-container *ngIf="this.as.isAuth$ | async">
+            <p *ngIf="this.as.user$ | async as user">
+                Hello,
+                <a routerLink="/account" class="font-semibold">{{
+                    user.username
+                }}</a>
+            </p>
+        </ng-container>
+        <ul
+            *ngIf="!(this.as.isAuth$ | async); else isAuth"
+            class="menulist flex gap-1.5"
+        >
             <li><a routerLink="/reg">Reg</a></li>
+            <hr class="w-0.5 h-5/6 bg-gray-800" />
+            <li><a routerLink="/login">Login</a></li>
         </ul>
+        <ng-template #isAuth>
+            <ul class="menulist flex gap-1.5">
+                <li><a routerLink="/account">Account</a></li>
+                <hr class="w-0.5 h-5/6 bg-gray-800" />
+                <li><a routerLink="/logout">Logout</a></li>
+            </ul>
+        </ng-template>
     </nav>
 </header>
 
