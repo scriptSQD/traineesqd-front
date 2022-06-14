@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/traineesqd/assets",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
