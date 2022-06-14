@@ -8,14 +8,15 @@ import { LogoutComponent } from "./logout/logout.component";
 import { RegComponent } from "./reg/reg.component";
 
 const routes: Routes = [
-    { path: "home", component: HomeComponent },
-    { path: "reg", component: RegComponent },
-    { path: "login", component: LoginComponent },
-    { path: "logout", component: LogoutComponent },
+    { path: "home", component: HomeComponent, title: "Home" },
+    { path: "reg", component: RegComponent, title: "Reg" },
+    { path: "login", component: LoginComponent, title: "Login" },
+    { path: "logout", component: LogoutComponent, title: "Logout" },
     {
         path: "account",
         component: AccountComponent,
         canActivate: [AccountGuard],
+        title: "Account",
     },
     { path: "", pathMatch: "full", redirectTo: "/home" },
 ];

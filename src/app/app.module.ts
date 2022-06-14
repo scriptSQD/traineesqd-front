@@ -14,6 +14,8 @@ import { ValidationIndicatorComponent } from "./components/validation-indicator/
 import { LogoutComponent } from "./logout/logout.component";
 import { AccountComponent } from "./account/account.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TitleStrategy } from "@angular/router";
+import { TSQDTitleStrategy } from "./title.strategy";
 
 @NgModule({
     declarations: [
@@ -33,7 +35,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
         HttpClientModule,
         BrowserAnimationsModule,
     ],
-    providers: [],
+    providers: [{ provide: TitleStrategy, useClass: TSQDTitleStrategy }],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -5,7 +5,6 @@
 export const environment = {
     production: false,
     cipher_key: "VG8qnAvZLaF5L$!HLbPS*k86$M6yG*am",
-    iv_bytes: "o7gDC!5LTfgXg@3t",
     backend_url: "http://localhost:3000",
 };
 
