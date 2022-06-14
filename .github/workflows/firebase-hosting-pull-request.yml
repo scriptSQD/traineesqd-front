@@ -8,9 +8,6 @@ jobs:
         if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-            - run: npm i && npm run build
-
             - name: Cache Project npm dependencies
               uses: actions/cache@v2
               with:
@@ -18,6 +15,9 @@ jobs:
                   key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
                   restore-keys: |
                       ${{ runner.os }}-node-
+
+            - uses: actions/checkout@v2
+            - run: npm i && npm run build
 
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:

@@ -2,19 +2,28 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-'on':
-  push:
-    branches:
-      - master
+"on":
+    push:
+        branches:
+            - master
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm i && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRAINEESQD }}'
-          channelId: live
-          projectId: traineesqd
+    build_and_deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Cache Project npm dependencies
+              uses: actions/cache@v2
+              with:
+                  path: "./node_modules"
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+
+            - uses: actions/checkout@v2
+            - run: npm i && npm run build
+
+            - uses: FirebaseExtended/action-hosting-deploy@v0
+              with:
+                  repoToken: "${{ secrets.GITHUB_TOKEN }}"
+                  firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRAINEESQD }}"
+                  channelId: live
+                  projectId: traineesqd
