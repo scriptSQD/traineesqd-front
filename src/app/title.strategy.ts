@@ -4,7 +4,7 @@ import { RouterStateSnapshot, TitleStrategy } from "@angular/router";
 
 @Injectable()
 export class TSQDTitleStrategy extends TitleStrategy {
-    constructor(private titleService: Title) {
+    constructor(private readonly titleService: Title) {
         super();
     }
 

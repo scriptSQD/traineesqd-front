@@ -5,7 +5,7 @@ export function UpdateLocalJwt(jwt: string): string {
     return jwt;
 }
 
-export function ClearLocalJwt(): void {
+export function clearLocalJwt(): void {
     localStorage.removeItem(JWT_LOCALSTORAGE_KEY);
 }
 

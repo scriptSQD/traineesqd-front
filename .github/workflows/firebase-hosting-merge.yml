@@ -18,6 +18,12 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
 
+            - name: Setup environment
+              env:
+                  PRODUCTION: "true"
+                  CIPHER_KEY: "${{ secrets.CIPHER_KEY }}"
+                  BACKEND_URL: "https://traineesqd-api.herokuapp.com"
+
             - uses: actions/checkout@v2
             - run: npm i && npm run build
 

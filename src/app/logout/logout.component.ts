@@ -12,25 +12,15 @@ import { AuthService } from "../auth/auth.service";
             </p>
         </div>
     `,
-    styles: [
-        `
-            :host {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                flex: 1;
-            }
-        `,
-    ],
+    styles: [],
 })
 export class LogoutComponent implements AfterContentInit {
-    constructor(private as: AuthService) {}
+    constructor(private readonly authService: AuthService) {}
 
     ngAfterContentInit(): void {
-        this.as.logout();
+        this.authService.logout();
         setTimeout(() => {
             window.location.href = "/";
-        }, 3500);
+        }, 1500);
     }
 }

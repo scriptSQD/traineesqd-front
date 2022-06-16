@@ -19,33 +19,21 @@
                 placeholder="AwesomeUsername"
                 formControlName="username"
             />
-            <p
-                *ngIf="
-                    regForm.controls['username'].getError('minlength') &&
-                    regForm.controls['username'].dirty
-                "
-                class="not-prose input_error"
-            >
-                Username must be at least
-                {{
-                    regForm.controls["username"].getError("minlength")
-                        ?.requiredLength || "6"
-                }}
-                characters long!
-            </p>
-            <p
-                *ngIf="
-                    regForm.controls['username'].getError(
-                        'uniqueValueAlreadyTaken'
-                    )
-                "
-                class="text-sm font-light m-0 text-rose-600"
-            >
-                Username already taken!
-            </p>
-            <ValidationIndicator
-                [vi-control]="regForm.controls['username']"
-            ></ValidationIndicator>
+
+            <app-form-validation-handler
+                [control]="regForm.controls['username']"
+                validationError="minlength"
+                errorMsg="Username must be at least 6 characters long."
+            ></app-form-validation-handler>
+            <app-form-validation-handler
+                [control]="regForm.controls['username']"
+                validationError="uniqueValueAlreadyTaken"
+                errorMsg="Username already taken!"
+            ></app-form-validation-handler>
+
+            <app-loading-indicator
+                [control]="regForm.controls['username']"
+            ></app-loading-indicator>
         </label>
         <label for="email">
             <span>Email</span>
@@ -55,19 +43,17 @@
                 placeholder="urmail@domain.ex"
                 formControlName="email"
             />
-            <FormValidationHandler
-                [fvh-control]="regForm.controls['email']"
-                fvh-check-for-error="email"
-            ></FormValidationHandler>
-            <FormValidationHandler
-                [fvh-control]="regForm.controls['email']"
-                fvh-check-for-error="uniqueValueAlreadyTaken"
-                fvh-error-msg="Email already taken!"
+
+            <app-form-validation-handler
+                [control]="regForm.controls['email']"
+                validationError="email"
+            ></app-form-validation-handler>
+            <app-form-validation-handler
+                [control]="regForm.controls['email']"
+                validationError="uniqueValueAlreadyTaken"
+                errorMsg="Email already taken!"
             >
-            </FormValidationHandler>
-            <ValidationIndicator
-                [vi-control]="regForm.controls['email']"
-            ></ValidationIndicator>
+            </app-form-validation-handler>
         </label>
         <label for="password" class="flex flex-col">
             <span>Password</span>
@@ -83,21 +69,22 @@
                 placeholder="Confirm password"
                 formControlName="passConfirm"
             />
+
             <p
                 *ngIf="regForm.errors?.['passwordsMismatch']"
-                class="not-prose input_error"
+                class="not-prose text-sm font-light text-rose-600 m-0"
             >
                 Passwords do not match!
             </p>
         </label>
         <button type="submit" class="submit_button" [disabled]="!regForm.valid">
-            {{ regForm.valid ? "Register!" : "Complete the form first!" }}
+            Register!
         </button>
     </div>
 </form>
-<span *ngIf="regSubmissionInProcess | async" class="flex gap-2">
-    <div
-        class="w-8 h-8 bg-transparent border-4 border-gray-300 border-t-gray-800 animate-spin rounded-full"
-    ></div>
-    Processing registration...
-</span>
+<app-loading-indicator
+    *ngIf="regSubmissionInProcess | async"
+    placeholder="Processing registration..."
+    diameter="1.5rem"
+    thickness="6px"
+></app-loading-indicator>

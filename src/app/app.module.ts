@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { LoginComponent } from "./login/login.component";
 import { FormValidationHandlerComponent } from "./components/form-validation-handler/form-validation-handler.component";
-import { ValidationIndicatorComponent } from "./components/validation-indicator/validation-indicator.component";
+import { ValidationIndicatorComponent } from "./components/loading-indicator/loading-indicator.component";
 import { LogoutComponent } from "./logout/logout.component";
 import { AccountComponent } from "./account/account.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";

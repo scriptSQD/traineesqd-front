@@ -2,13 +2,13 @@ import { Component, Input, OnInit } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 
 @Component({
-    selector: "FormValidationHandler",
+    selector: "app-form-validation-handler",
     template: `
         <p
-            *ngIf="control.getError(err) && control.dirty"
+            *ngIf="control.getError(validationError) && control.dirty"
             class="not-prose text-sm font-light text-rose-600 m-0"
         >
-            {{ err_msg }}
+            {{ errorMsg }}
         </p>
     `,
     styles: [],
@@ -16,9 +16,9 @@ import { AbstractControl } from "@angular/forms";
 export class FormValidationHandlerComponent implements OnInit {
     constructor() {}
 
-    @Input("fvh-control") control!: AbstractControl;
-    @Input("fvh-check-for-error") err!: string;
-    @Input("fvh-error-msg") err_msg?: string = "Incorrect field!";
+    @Input() control!: AbstractControl;
+    @Input() validationError!: string;
+    @Input() errorMsg?: string = "Incorrect field!";
 
     ngOnInit(): void {}
 }

@@ -1,11 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
-import {
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    Validators,
-} from "@angular/forms";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { ReplaySubject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { AuthService } from "../auth/auth.service";
@@ -21,20 +16,14 @@ import { UsernameAvailabilityStatus } from "./services/reg.service";
     styleUrls: ["./reg.component.scss"],
 })
 export class RegComponent implements OnInit {
-    constructor(
-        private fb: FormBuilder,
-        private readonly http: HttpClient,
-        private readonly as: AuthService
-    ) {}
+    usernameAvailable$ = new ReplaySubject<UsernameAvailabilityStatus>();
 
-    usernameAvailable$: ReplaySubject<UsernameAvailabilityStatus> =
-        new ReplaySubject<UsernameAvailabilityStatus>();
-    regForm: FormGroup = this.fb.nonNullable.group(
+    regForm = this.fb.nonNullable.group(
         {
             username: new FormControl<string>("", {
                 validators: [Validators.required, Validators.minLength(4)],
                 asyncValidators: UniqueFieldValueAvailable(
-                    1000,
+                    1500,
                     this.http,
                     `${environment.backend_url}/users/checkUsername`
                 ),
@@ -42,7 +31,7 @@ export class RegComponent implements OnInit {
             email: new FormControl<string>("", {
                 validators: [Validators.email, Validators.required],
                 asyncValidators: UniqueFieldValueAvailable(
-                    1000,
+                    1500,
                     this.http,
                     `${environment.backend_url}/users/checkEmail`
                 ),
@@ -61,16 +50,29 @@ export class RegComponent implements OnInit {
         }
     );
 
-    regSubmissionInProcess: ReplaySubject<boolean> =
-        new ReplaySubject<boolean>();
-    async submitReg(): Promise<void> {
+    regSubmissionInProcess = new ReplaySubject<boolean>();
+
+    constructor(
+        private fb: FormBuilder,
+        private readonly http: HttpClient,
+        private readonly authService: AuthService
+    ) {}
+
+    submitReg(): void {
         this.regSubmissionInProcess.next(true);
 
-        await this.as.register({
-            ...this.regForm.value,
-        });
-
-        this.regSubmissionInProcess.next(false);
+        const { username, email, password } = this.regForm.value;
+        this.authService
+            .register({
+                username: username!,
+                email: email!,
+                password: password!,
+            })
+            .subscribe({
+                next: () => {
+                    this.regSubmissionInProcess.next(false);
+                },
+            });
     }
 
     ngOnInit(): void {}
