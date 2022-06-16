@@ -16,6 +16,7 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
 
+            - uses: actions/checkout@v2
             - name: Setup environment
               env:
                   PRODUCTION: "true"
