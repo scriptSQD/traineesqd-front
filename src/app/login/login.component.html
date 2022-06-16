@@ -1,5 +1,5 @@
 <form
-    class="w-fit h-fit border border-neutral-200 rounded-lg shadow px-6 py-3 m-8"
+    class="w-fit h-fit flex flex-col items-center border border-neutral-200 rounded-lg shadow px-6 py-3 m-8"
     [formGroup]="loginForm"
     (ngSubmit)="submitLogin()"
 >
@@ -58,11 +58,11 @@
             class="submit_button"
             [disabled]="!loginForm.valid"
         >
-            {{ loginForm.valid ? "Login!" : "Complete the form first!" }}
+            Login!
         </button>
     </div>
-    <p *ngIf="loginErrors" class="my-1 text-rose-600 text-center">
-        {{ loginErrors.error.message }}
+    <p *ngIf="loginErrors" class="my-1 text-rose-600 text-center max-w-[32ch]">
+        {{ loginErrors.message }}
     </p>
 </form>
 

@@ -1,11 +1,11 @@
-export type LoginDTO = {
+export interface ILogin {
     username: string;
     password: string;
-    totp?: string;
-};
+    totp: string | null;
+}
 
-export type RegisterDTO = {
+export interface IRegister {
     username: string;
     password: string;
     email: string;
-};
+}

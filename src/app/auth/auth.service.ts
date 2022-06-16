@@ -1,14 +1,14 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, lastValueFrom, ReplaySubject } from "rxjs";
+import { catchError, Observable, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
-import { LoginDTO, RegisterDTO } from "./models/Auth.dto";
-import { User } from "./models/User.model";
+import { ILogin, IRegister } from "./interfaces/auth.interface";
+import { User } from "./models/user.model";
 import {
-    ClearLocalJwt,
+    clearLocalJwt,
     getLocalStorageJwt,
     UpdateLocalJwt,
-} from "./utils/Utils";
+} from "./utils/utils";
 
 type JwtAuth = {
     jwt: string;
@@ -19,6 +19,10 @@ type JwtAuth = {
     providedIn: "root",
 })
 export class AuthService {
+    user$ = new ReplaySubject<User | null>();
+    jwt = getLocalStorageJwt();
+    isAuth$ = new ReplaySubject<boolean>();
+
     constructor(private readonly http: HttpClient) {
         if (!this.jwt) return;
 
@@ -32,57 +36,51 @@ export class AuthService {
                     this.isAuth$.next(true);
                 },
                 error: () => {
-                    ClearLocalJwt();
+                    clearLocalJwt();
                     this.isAuth$.next(false);
                 },
             });
     }
 
-    user$: ReplaySubject<User | null> = new ReplaySubject<User | null>();
-    jwt: string | null = getLocalStorageJwt();
-    isAuth$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
-    async login(payload: LoginDTO): Promise<HttpErrorResponse | null> {
-        let errors: HttpErrorResponse | null = null;
-        const res = await lastValueFrom(
-            this.http.post<JwtAuth>(`${environment.backend_url}/auth/login`, {
+    login(payload: ILogin): Observable<HttpErrorResponse | null> {
+        return this.http
+            .post<JwtAuth>(`${environment.backend_url}/auth/login`, {
                 ...payload,
             })
-        ).catch(err => {
-            if (err.totpCodeRequired)
-                errors = new HttpErrorResponse({
-                    error: { totpCodeRequired: true },
-                });
-            else errors = new HttpErrorResponse({ error: err });
-        });
+            .pipe(
+                switchMap(res => {
+                    this.jwt = UpdateLocalJwt(res.jwt);
+                    this.user$.next(res.user);
+                    this.isAuth$.next(true);
 
-        if (!res) return errors;
-
-        this.jwt = UpdateLocalJwt(res.jwt);
-        this.user$.next(res.user);
-        this.isAuth$.next(true);
-        return null;
+                    return of(null);
+                }),
+                catchError(err => {
+                    return of(err);
+                })
+            );
     }
 
-    async register(payload: RegisterDTO): Promise<void> {
-        const res = await lastValueFrom(
-            this.http.post<JwtAuth>(
-                `${environment.backend_url}/auth/register`,
-                {
-                    ...payload,
-                }
-            )
-        );
+    register(payload: IRegister): Observable<void> {
+        return this.http
+            .post<JwtAuth>(`${environment.backend_url}/auth/register`, {
+                ...payload,
+            })
+            .pipe(
+                switchMap(res => {
+                    if (!res) throw new HttpErrorResponse({ error: res });
 
-        if (!res) throw new HttpErrorResponse({ error: res });
+                    this.jwt = UpdateLocalJwt(res.jwt);
+                    this.user$.next(res.user);
+                    this.isAuth$.next(true);
 
-        this.jwt = UpdateLocalJwt(res.jwt);
-        this.user$.next(res.user);
-        this.isAuth$.next(true);
+                    return of(undefined);
+                })
+            );
     }
 
     logout(): void {
-        ClearLocalJwt();
+        clearLocalJwt();
         this.jwt = null;
         this.isAuth$.next(false);
         this.user$.next(null);

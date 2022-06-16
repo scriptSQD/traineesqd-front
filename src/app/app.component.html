@@ -1,16 +1,16 @@
 <header class="sticky top-0 w-full bg-white shadow mb-4">
     <nav class="flex mx-3 py-2 justify-between items-center">
         <a routerLink="/home" class="font-bold text-xl">Home</a>
-        <ng-container *ngIf="this.as.isAuth$ | async">
-            <p *ngIf="this.as.user$ | async as user">
+        <ng-container *ngIf="this.authService.isAuth$ | async">
+            <p *ngIf="this.authService.user$ | async as user">
                 Hello,
                 <a routerLink="/account" class="font-semibold">{{
-                    user.username
+                    user.getUsername
                 }}</a>
             </p>
         </ng-container>
         <ul
-            *ngIf="!(this.as.isAuth$ | async); else isAuth"
+            *ngIf="!(this.authService.isAuth$ | async); else isAuth"
             class="menulist flex gap-1.5"
         >
             <li><a routerLink="/reg">Reg</a></li>
@@ -27,4 +27,6 @@
     </nav>
 </header>
 
-<router-outlet></router-outlet>
+<div class="component-wrapper">
+    <router-outlet></router-outlet>
+</div>
