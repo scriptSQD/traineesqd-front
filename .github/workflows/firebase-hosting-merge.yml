@@ -22,17 +22,17 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
 
-            - uses: actions/checkout@v2
-              name: Install dependencies
+            - name: Fetch repo
+              uses: actions/checkout@v2
+
+            - name: Install dependencies
               run: npm i
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: 16
-            - run: node ci-script.js
+            - name: Create environment files for Angular
+              run: node ci-script.js
 
-            - uses: actions/checkout@v2
-            - run: npm run build
+            - name: Build the project
+              run: npm run build
 
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:
