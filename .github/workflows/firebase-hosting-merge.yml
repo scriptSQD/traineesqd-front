@@ -24,6 +24,7 @@ jobs:
                   PRODUCTION: "true"
                   CIPHER_KEY: "${{ secrets.CIPHER_KEY }}"
                   BACKEND_URL: "https://traineesqd-api.herokuapp.com"
+            - run: touch src/environments/environment.ts
 
             - uses: actions/checkout@v2
             - run: npm i && npm run build
