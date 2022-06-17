@@ -20,6 +20,12 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
 
+            - name: Setup environment
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 16
+            - run: node ci-script.js
+
             - uses: actions/checkout@v2
             - run: npm i && npm run build
 
