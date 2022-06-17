@@ -9,8 +9,8 @@ const envFileProd = "environment.prod.ts";
 const envContents = String.raw`import { IEnvironment } from "./env.interface";
 
 export const environment: IEnvironment = {
-	production: ${process.env["PRODUCTION"] === "true"}
-	cipher_key: "${String.raw`${process.env["CIPHER_KEY"]}`}",
+	production: ${process.env["PRODUCTION"] === "true"},
+	cipher_key: "${process.env["CIPHER_KEY"]}",
 	backend_url: "${process.env["BACKEND_URL"]}",
 };
 `;
