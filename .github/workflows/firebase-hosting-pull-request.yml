@@ -20,7 +20,8 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
 
-            - name: Install dependencies
+            - uses: actions/checkout@v2
+              name: Install dependencies
               run: npm i
 
             - uses: actions/setup-node@v2
@@ -29,7 +30,7 @@ jobs:
             - run: node ci-script.js
 
             - uses: actions/checkout@v2
-            - run: npm i && npm run build
+              run: npm run build
 
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:
