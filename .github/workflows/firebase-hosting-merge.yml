@@ -9,6 +9,10 @@ name: Deploy to Firebase Hosting on merge
 jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
+        env:
+            PRODUCTION: "true"
+            CIPHER_KEY: "${{ secrets.CIPHER_KEY }}"
+            BACKEND_URL: "https://traineesqd-api.herokuapp.com"
         steps:
             - name: Cache Project npm dependencies
               uses: actions/cache@v2
@@ -18,12 +22,17 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
 
-            - uses: actions/checkout@v2
-            - run: npm i && npm run build
-              env:
-                  PRODUCTION: "true"
-                  CIPHER_KEY: "${{ secrets.CIPHER_KEY }}"
-                  BACKEND_URL: "https://traineesqd-api.herokuapp.com"
+            - name: Fetch repo
+              uses: actions/checkout@v2
+
+            - name: Install dependencies
+              run: npm i
+
+            - name: Create environment files for Angular
+              run: node ci-script.js
+
+            - name: Build the project
+              run: npm run build
 
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:
