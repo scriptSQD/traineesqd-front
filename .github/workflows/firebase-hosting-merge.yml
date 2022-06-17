@@ -23,10 +23,6 @@ jobs:
                       ${{ runner.os }}-node-
 
             - uses: actions/checkout@v2
-            - name: Setup environment
-              run: touch src/environments/environment.ts
-
-            - uses: actions/checkout@v2
             - run: npm i && npm run build
               env:
                   PRODUCTION: "true"
