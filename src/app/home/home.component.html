@@ -1,6 +1,6 @@
 <main class="prose w-full flex flex-col items-center prose-h1:m-0 gap-4">
 	<div class="flex flex-col gap-3 items-center justify-center">
-		<h1 class="text-[#52414c]">TraineeSQD</h1>
+		<h1 class="text-accent-900">TraineeSQD</h1>
 		<p class="m-0">
 			For training purposes... I'm trying to do a lot of stuff here.
 		</p>
@@ -8,10 +8,15 @@
 	<div
 		class="flex flex-col border border-neutral-300 rounded-lg px-5 py-4 items-center"
 	>
-		<h1 class="text-center text-[#52414c]">Latest commit:</h1>
+		<h1 class="text-center text-accent-900">Latest commit:</h1>
 		<div *ngIf="latestCommit as lc">
 			<h3 class="my-1 text-center">
-				<a [href]="lc.html_url">Commit {{ lc.sha.substring(0, 7) }}</a>
+				<a
+					[href]="lc.html_url"
+					target="_blank"
+					rel="noreferrer noopener"
+					>Commit {{ lc.sha.substring(0, 7) }}</a
+				>
 			</h3>
 			<span class="flex gap-3 prose-p:my-0.5">
 				<div class="flex flex-col my-1">
@@ -42,6 +47,7 @@
 		<app-loading-indicator
 			placeholder="Loading latest commit..."
 			[loaderCondition]="latestCommitLoading | async"
+			margins="0.5rem 0px"
 		></app-loading-indicator>
 	</div>
 	<ul>
@@ -67,5 +73,34 @@
 		>> 14.06.2022
 		<li>Add account page</li>
 		<li>Implement TOTP login flow</li>
+	</ul>
+	<ul>
+		>> 16.06.2022
+		<li>Fix files naming case.</li>
+		<li>Transition to RxJS opposed to async/await.</li>
+		<li>Add loading indicators across the app.</li>
+		<li>
+			Clean up the code: remove redundancy, unused comments and
+			unnecessary type annotations.
+		</li>
+		<li>Remove env files from repo, implement environment interface.</li>
+	</ul>
+	<ul>
+		>> 17.06.2022
+		<li>
+			Update CI/CD flow to create environment files during CD process.
+		</li>
+	</ul>
+	<ul>
+		>> 18.06.2022
+		<li>
+			Fetch latest commit info from GitHub API and display it on the
+			homepage.
+		</li>
+	</ul>
+	<ul>
+		>> 26.06.2022
+		<li>Add Todos widget in "Utils" section. Based on NGXS.</li>
+		<li>Fix minor UI things.</li>
 	</ul>
 </main>

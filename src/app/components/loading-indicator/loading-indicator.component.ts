@@ -1,10 +1,14 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { ElementSize } from "../types/element-size.type";
+import { ElementMargins, ElementSize } from "../types/element-size.type";
 
 @Component({
 	selector: "app-loading-indicator",
 	template: `
-		<span *ngIf="loaderCondition" class="flex gap-2">
+		<span
+			*ngIf="loaderCondition"
+			class="flex gap-2"
+			[ngStyle]="{ margin: margins }"
+		>
 			<div
 				class="bg-transparent animate-spin rounded-full my-1"
 				[ngClass]="{
@@ -31,6 +35,7 @@ export class ValidationIndicatorComponent implements OnInit {
 	@Input() invertColors: boolean = false;
 	@Input() diameter: ElementSize = "1.25rem";
 	@Input() thickness: ElementSize = "4px";
+	@Input() margins: ElementMargins = "0px";
 
 	ngOnInit(): void {}
 }

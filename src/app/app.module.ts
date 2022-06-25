@@ -16,26 +16,51 @@ import { AccountComponent } from "./account/account.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TitleStrategy } from "@angular/router";
 import { TSQDTitleStrategy } from "./title.strategy";
+import { UtilsComponent } from "./utils/utils.component";
+import { TodosNgxsComponent } from "./utils/components/todos-ngxs/todos-ngxs.component";
+import { NgxsModule } from "@ngxs/store";
+import { TodosState } from "./utils/components/todos-ngxs/states/todos.state";
+import { InputComponent } from "./components/input/input.component";
+import { ButtonComponent } from "./components/button/button.component";
+
+import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
+import { NgxsLoggerPluginModule } from "@ngxs/logger-plugin";
+import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
+import { environment } from "src/environments/environment";
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        RegComponent,
-        HomeComponent,
-        LoginComponent,
-        FormValidationHandlerComponent,
-        ValidationIndicatorComponent,
-        LogoutComponent,
-        AccountComponent,
-    ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-    ],
-    providers: [{ provide: TitleStrategy, useClass: TSQDTitleStrategy }],
-    bootstrap: [AppComponent],
+	declarations: [
+		AppComponent,
+		RegComponent,
+		HomeComponent,
+		LoginComponent,
+		FormValidationHandlerComponent,
+		ValidationIndicatorComponent,
+		LogoutComponent,
+		AccountComponent,
+		UtilsComponent,
+		TodosNgxsComponent,
+		InputComponent,
+		ButtonComponent,
+	],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		ReactiveFormsModule,
+		HttpClientModule,
+		BrowserAnimationsModule,
+		NgxsModule.forRoot([TodosState]),
+		NgxsStoragePluginModule.forRoot({
+			key: ["todos"],
+		}),
+		NgxsReduxDevtoolsPluginModule.forRoot({
+			disabled: environment.production,
+		}),
+		NgxsLoggerPluginModule.forRoot({
+			disabled: environment.production,
+		}),
+	],
+	providers: [{ provide: TitleStrategy, useClass: TSQDTitleStrategy }],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
