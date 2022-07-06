@@ -7,10 +7,6 @@ jobs:
     build_and_preview:
         if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
         runs-on: ubuntu-latest
-        env:
-            PRODUCTION: "true"
-            CIPHER_KEY: "${{ secrets.CIPHER_KEY }}"
-            BACKEND_URL: "https://traineesqd-api.herokuapp.com"
         steps:
             - name: Cache Project npm dependencies
               uses: actions/cache@v2
@@ -28,6 +24,10 @@ jobs:
 
             - name: Create environment files for Angular
               run: node ci-script.js
+              env:
+                  PRODUCTION: "true"
+                  CIPHER_KEY: "${{ secrets.CIPHER_KEY }}"
+                  BACKEND_URL: "https://traineesqd-api.herokuapp.com"
 
             - name: Build the project
               run: npm run build
