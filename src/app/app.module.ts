@@ -27,6 +27,8 @@ import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
 import { NgxsLoggerPluginModule } from "@ngxs/logger-plugin";
 import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
 import { environment } from "src/environments/environment";
+import { AuthService } from "./auth/auth.service";
+import { TodoCardComponent } from "./utils/components/todos-ngxs/components/todo-card/todo-card.component";
 
 @NgModule({
 	declarations: [
@@ -42,6 +44,7 @@ import { environment } from "src/environments/environment";
 		TodosNgxsComponent,
 		InputComponent,
 		ButtonComponent,
+		TodoCardComponent,
 	],
 	imports: [
 		BrowserModule,

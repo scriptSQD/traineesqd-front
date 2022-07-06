@@ -4,7 +4,6 @@ import { Select, Store } from "@ngxs/store";
 import { Observable } from "rxjs";
 import { Todos } from "./actions/todos-ngxs.actions";
 import { ITodo } from "./interfaces/todos.interface";
-import { TodosState } from "./states/todos.state";
 
 @Component({
 	selector: "app-todos-ngxs",
@@ -21,10 +20,7 @@ export class TodosNgxsComponent implements OnInit {
 		}),
 	});
 
-	@Select(TodosState.todos) todos$?: Observable<{
-		completed: ITodo[];
-		uncompleted: ITodo[];
-	}>;
+	@Select() todos$?: Observable<ITodo[]>;
 
 	constructor(
 		private readonly fb: FormBuilder,

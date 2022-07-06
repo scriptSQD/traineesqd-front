@@ -24,7 +24,10 @@ export class AuthService {
 	isAuth$ = new ReplaySubject<boolean>();
 
 	constructor(private readonly http: HttpClient) {
-		if (!this.jwt) return;
+		if (!this.jwt) {
+			this.isAuth$.next(false);
+			return;
+		}
 
 		this.http
 			.get<IUser>(`${environment.backend_url}/users/me`, {

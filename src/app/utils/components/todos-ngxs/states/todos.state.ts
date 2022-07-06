@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Action, Selector, State, StateContext, StateToken } from "@ngxs/store";
+import { Action, State, StateContext, StateToken } from "@ngxs/store";
 import { uid } from "src/utils/utils";
 import { Todos } from "../actions/todos-ngxs.actions";
 import { ITodo } from "../interfaces/todos.interface";
@@ -13,14 +13,6 @@ export const TODOS_STATE_TOKEN = new StateToken<string>("todos");
 @Injectable()
 export class TodosState {
 	constructor() {}
-
-	@Selector()
-	static todos(state: ITodo[]): { completed: ITodo[]; uncompleted: ITodo[] } {
-		return {
-			completed: state.filter(todo => todo.completed === true),
-			uncompleted: state.filter(todo => todo.completed === false),
-		};
-	}
 
 	@Action(Todos.Add)
 	addTodo(ctx: StateContext<ITodo[]>, action: Todos.Add): void {
