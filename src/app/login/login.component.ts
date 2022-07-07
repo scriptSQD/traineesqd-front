@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 import { ReplaySubject } from "rxjs";
 import { AuthService } from "../auth/auth.service";
 
@@ -30,7 +31,8 @@ export class LoginComponent implements OnInit {
 	constructor(
 		private readonly fb: FormBuilder,
 		private readonly authService: AuthService,
-		private readonly cdr: ChangeDetectorRef
+		private readonly cdr: ChangeDetectorRef,
+		private readonly router: Router
 	) {}
 
 	submitLogin(): void {
@@ -57,13 +59,13 @@ export class LoginComponent implements OnInit {
 						this.needsTotp = true;
 						this.cdr.detectChanges();
 					} else if (err?.error.resetTwoFa) {
-						setTimeout(() => window.location.reload(), 2000);
+						setTimeout(() => this.router.navigateByUrl("."), 2000);
 						this.loginErrors = err?.error;
 					} else if (err?.error.message)
 						this.loginErrors = err?.error;
 					else {
 						this.loginErrors = err;
-						window.location.href = "/";
+						this.router.navigateByUrl("/");
 					}
 
 					this.loginSubmissionInProcess.next(false);

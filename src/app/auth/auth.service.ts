@@ -19,9 +19,9 @@ type JwtAuth = {
 	providedIn: "root",
 })
 export class AuthService {
-	user$ = new ReplaySubject<User | null>();
+	user$ = new ReplaySubject<User | null>(1);
 	jwt = getLocalStorageJwt();
-	isAuth$ = new ReplaySubject<boolean>();
+	isAuth$ = new ReplaySubject<boolean>(1);
 
 	constructor(private readonly http: HttpClient) {
 		if (!this.jwt) {
