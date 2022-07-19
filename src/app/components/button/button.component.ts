@@ -9,20 +9,7 @@ import {
 
 @Component({
 	selector: "ui-button",
-	template: `
-		<button
-			[type]="type"
-			class="submit_button border border-neutral-400 w-fit shadow-md hover:shadow"
-			[disabled]="disabledCondition"
-		>
-			<ng-container *ngIf="children">
-				<ng-template
-					*ngFor="let child of children"
-					[ngTemplateOutlet]="child"
-				></ng-template>
-			</ng-container>
-		</button>
-	`,
+	templateUrl: "./button.component.html",
 	styles: [
 		`
 			.submit_button {

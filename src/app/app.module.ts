@@ -7,7 +7,7 @@ import { RegComponent } from "./reg/reg.component";
 import { HomeComponent } from "./home/home.component";
 import { ReactiveFormsModule } from "@angular/forms";
 
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LoginComponent } from "./login/login.component";
 import { FormValidationHandlerComponent } from "./components/form-validation-handler/form-validation-handler.component";
 import { ValidationIndicatorComponent } from "./components/loading-indicator/loading-indicator.component";
@@ -27,8 +27,8 @@ import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
 import { NgxsLoggerPluginModule } from "@ngxs/logger-plugin";
 import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
 import { environment } from "src/environments/environment";
-import { AuthService } from "./auth/auth.service";
 import { TodoCardComponent } from "./utils/components/todos-ngxs/components/todo-card/todo-card.component";
+import { AuthInterceptor } from "./utils/interceptors/auth-interceptor.interceptor";
 
 @NgModule({
 	declarations: [
@@ -63,7 +63,10 @@ import { TodoCardComponent } from "./utils/components/todos-ngxs/components/todo
 			disabled: environment.production,
 		}),
 	],
-	providers: [{ provide: TitleStrategy, useClass: TSQDTitleStrategy }],
+	providers: [
+		{ provide: TitleStrategy, useClass: TSQDTitleStrategy },
+		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

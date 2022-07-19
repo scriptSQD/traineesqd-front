@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, OnInit } from "@angular/core";
-import { map, ReplaySubject } from "rxjs";
+import { ReplaySubject } from "rxjs";
 import { HomeService } from "./home.service";
 import { ICommit } from "./interfaces/commit.inteface";
 

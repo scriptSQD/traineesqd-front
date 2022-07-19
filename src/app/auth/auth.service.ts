@@ -2,12 +2,13 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, Observable, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
+import { withoutAuthContext } from "../utils/constants";
 import { ILogin, IRegister } from "./interfaces/auth.interface";
 import { IUser, User } from "./models/user.model";
 import {
 	clearLocalJwt,
 	getLocalStorageJwt,
-	UpdateLocalJwt,
+	updateLocalJwt,
 } from "./utils/utils";
 
 type JwtAuth = {
@@ -47,12 +48,18 @@ export class AuthService {
 
 	login(payload: ILogin): Observable<HttpErrorResponse | null> {
 		return this.http
-			.post<JwtAuth>(`${environment.backend_url}/auth/login`, {
-				...payload,
-			})
+			.post<JwtAuth>(
+				`${environment.backend_url}/auth/login`,
+				{
+					...payload,
+				},
+				{
+					context: withoutAuthContext(),
+				}
+			)
 			.pipe(
 				switchMap(res => {
-					this.jwt = UpdateLocalJwt(res.jwt);
+					this.jwt = updateLocalJwt(res.jwt);
 					this.user$.next(new User(res.user));
 					this.isAuth$.next(true);
 
@@ -66,14 +73,18 @@ export class AuthService {
 
 	register(payload: IRegister): Observable<void> {
 		return this.http
-			.post<JwtAuth>(`${environment.backend_url}/auth/register`, {
-				...payload,
-			})
+			.post<JwtAuth>(
+				`${environment.backend_url}/auth/register`,
+				{
+					...payload,
+				},
+				{ context: withoutAuthContext() }
+			)
 			.pipe(
 				switchMap(res => {
 					if (!res) throw new HttpErrorResponse({ error: res });
 
-					this.jwt = UpdateLocalJwt(res.jwt);
+					this.jwt = updateLocalJwt(res.jwt);
 					this.user$.next(new User(res.user));
 					this.isAuth$.next(true);
 

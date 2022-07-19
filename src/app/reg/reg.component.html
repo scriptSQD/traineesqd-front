@@ -11,7 +11,7 @@
 				registered and have access to all features!
 			</p>
 		</div>
-		<label for="username">
+		<label for="username" *ngIf="regForm.controls['username'] as username">
 			<span>Username</span>
 			<input
 				type="text"
@@ -21,25 +21,21 @@
 			/>
 
 			<app-form-validation-handler
-				[control]="regForm.controls['username']"
+				[control]="username"
 				validationError="minlength"
 				errorMsg="Username must be at least 6 characters long."
 			></app-form-validation-handler>
 			<app-form-validation-handler
-				[control]="regForm.controls['username']"
+				[control]="username"
 				validationError="uniqueValueAlreadyTaken"
 				errorMsg="Username already taken!"
 			></app-form-validation-handler>
 
 			<app-loading-indicator
-				[loaderCondition]="
-					regForm.controls['username'].getError(
-						'validatingUniqueness'
-					)
-				"
+				[loaderCondition]="username.getError('validatingUniqueness')"
 			></app-loading-indicator>
 		</label>
-		<label for="email">
+		<label for="email" *ngIf="regForm.controls['email'] as email">
 			<span>Email</span>
 			<input
 				type="email"
@@ -49,11 +45,11 @@
 			/>
 
 			<app-form-validation-handler
-				[control]="regForm.controls['email']"
+				[control]="email"
 				validationError="email"
 			></app-form-validation-handler>
 			<app-form-validation-handler
-				[control]="regForm.controls['email']"
+				[control]="email"
 				validationError="uniqueValueAlreadyTaken"
 				errorMsg="Email already taken!"
 			>

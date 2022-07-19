@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { constants } from "../utils/constants";
 import { ICommit } from "./interfaces/commit.inteface";
 
 @Injectable({
@@ -10,8 +11,6 @@ export class HomeService {
 	constructor(private readonly http: HttpClient) {}
 
 	getLatestCommit(): Observable<ICommit> {
-		return this.http.get<ICommit>(
-			"https://api.github.com/repos/scriptSQD/traineesqd-front/commits/master"
-		);
+		return this.http.get<ICommit>(constants.ghCommitUrl);
 	}
 }

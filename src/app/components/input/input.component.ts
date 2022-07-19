@@ -3,17 +3,7 @@ import { ControlContainer, FormGroupDirective } from "@angular/forms";
 
 @Component({
 	selector: "ui-input",
-	template: `
-		<label for="{{ id }}">
-			<span>{{ title }}</span>
-			<input
-				[id]="id"
-				[type]="type"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow transition-all outline-none"
-				[placeholder]="placeholder"
-				[formControlName]="inputFormControlName"
-		/></label>
-	`,
+	templateUrl: "./input.component.html",
 	styles: [
 		`
 			:host {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Select, Store } from "@ngxs/store";
 import { Observable } from "rxjs";
@@ -8,7 +8,7 @@ import { ITodo } from "./interfaces/todos.interface";
 @Component({
 	selector: "app-todos-ngxs",
 	templateUrl: "./todos-ngxs.component.html",
-	styleUrls: ["./todos-ngxs.component.scss"],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosNgxsComponent implements OnInit {
 	todoForm = this.fb.nonNullable.group({

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
-import { from, lastValueFrom, map, of, ReplaySubject, switchMap } from "rxjs";
+import { Component } from "@angular/core";
+import { map, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
 import { AuthService } from "../auth/auth.service";
 import * as CryptoJS from "crypto-js";
@@ -8,86 +8,82 @@ import * as QRCode from "qrcode";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 
 @Component({
-    selector: "app-account",
-    templateUrl: "./account.component.html",
-    styleUrls: ["./account.component.scss"],
+	selector: "app-account",
+	templateUrl: "./account.component.html",
+	styleUrls: ["./account.component.scss"],
 })
-export class AccountComponent implements OnInit {
-    constructor(
-        public readonly authService: AuthService,
-        private readonly http: HttpClient,
-        private readonly fb: FormBuilder
-    ) {}
+export class AccountComponent {
+	totpForm = this.fb.nonNullable.group({
+		totpCode: new FormControl<string>("", {
+			validators: [Validators.required, Validators.pattern(/^[0-9]{6}$/)],
+		}),
+	});
 
-    ngOnInit(): void {}
+	twoFaRegSuccess?: boolean;
+	regErrors?: string;
 
-    totpForm = this.fb.nonNullable.group({
-        totpCode: new FormControl<string>("", {
-            validators: [Validators.required, Validators.pattern(/^[0-9]{6}$/)],
-        }),
-    });
-    twoFaRegSuccess?: boolean;
-    regErrors?: string;
-    totpSubmitted(): void {
-        this.regErrors = undefined;
-        this.twoFaRegSuccess = undefined;
+	qrRendered = false;
+	requestingQr = new ReplaySubject<boolean>();
 
-        this.http
-            .post<boolean | HttpErrorResponse>(
-                `${environment.backend_url}/2fa/register`,
-                {
-                    token: this.totpForm.controls.totpCode.value,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${this.authService.jwt}`,
-                    },
-                }
-            )
-            .pipe(
-                map(res => {
-                    if (typeof res === "boolean") {
-                        this.twoFaRegSuccess = true;
-                        window.location.reload();
-                    } else this.regErrors = res.message;
-                })
-            )
-            .subscribe();
-    }
+	constructor(
+		public readonly authService: AuthService,
+		private readonly http: HttpClient,
+		private readonly fb: FormBuilder
+	) {}
 
-    qrRendered = false;
-    requestingQr = new ReplaySubject<boolean>();
-    requestQrCode(): void {
-        this.qrRendered = false;
-        this.requestingQr.next(true);
+	totpSubmitted(): void {
+		this.regErrors = undefined;
+		this.twoFaRegSuccess = undefined;
 
-        this.http
-            .get<{
-                encryptedHexified: string;
-                iv: string;
-            }>(`${environment.backend_url}/2fa/getUri`, {
-                headers: { Authorization: `Bearer ${this.authService.jwt}` },
-            })
-            .pipe(
-                switchMap(res => {
-                    const { encryptedHexified, iv } = res;
+		this.http
+			.post<boolean | HttpErrorResponse>(
+				`${environment.backend_url}/2fa/register`,
+				{
+					token: this.totpForm.controls.totpCode.value,
+				}
+			)
+			.pipe(
+				map(res => {
+					if (typeof res === "boolean") {
+						this.twoFaRegSuccess = true;
+						window.location.reload();
+					} else this.regErrors = res.message;
+				})
+			)
+			.subscribe();
+	}
 
-                    const decrypted = CryptoJS.AES.decrypt(
-                        encryptedHexified,
-                        environment.cipher_key,
-                        { iv: CryptoJS.enc.Hex.parse(iv) }
-                    );
+	requestQrCode(): void {
+		this.qrRendered = false;
+		this.requestingQr.next(true);
 
-                    return of(decrypted.toString(CryptoJS.enc.Utf8));
-                })
-            )
-            .subscribe({
-                next: (uri: string) => {
-                    QRCode.toCanvas(document.getElementById("qrCanvas"), uri);
+		this.http
+			.get<{
+				encryptedHexified: string;
+				iv: string;
+			}>(`${environment.backend_url}/2fa/getUri`, {
+				headers: { Authorization: `Bearer ${this.authService.jwt}` },
+			})
+			.pipe(
+				switchMap(res => {
+					const { encryptedHexified, iv } = res;
 
-                    this.qrRendered = true;
-                    this.requestingQr.next(false);
-                },
-            });
-    }
+					const decrypted = CryptoJS.AES.decrypt(
+						encryptedHexified,
+						environment.cipher_key,
+						{ iv: CryptoJS.enc.Hex.parse(iv) }
+					);
+
+					return of(decrypted.toString(CryptoJS.enc.Utf8));
+				})
+			)
+			.subscribe({
+				next: (uri: string) => {
+					QRCode.toCanvas(document.getElementById("qrCanvas"), uri);
+
+					this.qrRendered = true;
+					this.requestingQr.next(false);
+				},
+			});
+	}
 }

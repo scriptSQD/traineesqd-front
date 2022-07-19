@@ -4,16 +4,7 @@ import { AuthService } from "../auth/auth.service";
 
 @Component({
 	selector: "app-logout",
-	template: `
-		<div class="prose flex flex-col items-center justify-center gap-3">
-			<h1 class="m-0">Logged out.</h1>
-			<h3 class="m-0">You will now be redirected to the homepage.</h3>
-			<p class="m-0">
-				If you are not redirected, please click <a href="/">here</a>.
-			</p>
-		</div>
-	`,
-	styles: [],
+	templateUrl: "./logout.component.html",
 })
 export class LogoutComponent implements AfterContentInit {
 	constructor(

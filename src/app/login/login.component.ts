@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ReplaySubject } from "rxjs";
 import { AuthService } from "../auth/auth.service";
@@ -12,13 +12,13 @@ import { AuthService } from "../auth/auth.service";
 })
 export class LoginComponent implements OnInit {
 	loginForm = this.fb.nonNullable.group({
-		username: new FormControl<string>("", {
+		username: this.fb.control<string>("", {
 			validators: [Validators.required, Validators.minLength(4)],
 		}),
-		password: new FormControl<string>("", {
+		password: this.fb.control<string>("", {
 			validators: Validators.required,
 		}),
-		totp: new FormControl<string | null>(null, {
+		totp: this.fb.control<string | null>(null, {
 			validators: [Validators.pattern(/^[0-9]{6}$/)],
 		}),
 	});
