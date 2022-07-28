@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import {
+	HttpBackend,
+	HttpClient,
+	HttpErrorResponse,
+} from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, Observable, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
@@ -24,7 +28,11 @@ export class AuthService {
 	jwt = getLocalStorageJwt();
 	isAuth$ = new ReplaySubject<boolean>(1);
 
-	constructor(private readonly http: HttpClient) {
+	// Avoid Http interceptor to
+	// resolve circular dependency
+	http = new HttpClient(this.httpBackend);
+
+	constructor(private readonly httpBackend: HttpBackend) {
 		if (!this.jwt) {
 			this.isAuth$.next(false);
 			return;
@@ -32,7 +40,10 @@ export class AuthService {
 
 		this.http
 			.get<IUser>(`${environment.backend_url}/users/me`, {
-				headers: { Authorization: `Bearer ${this.jwt}` },
+				context: withoutAuthContext(),
+				headers: {
+					Authorization: `Bearer ${this.jwt}`,
+				},
 			})
 			.subscribe({
 				next: (res: IUser) => {

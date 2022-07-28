@@ -1,9 +1,10 @@
-<label for="{{ id }}">
+<label [for]="id">
 	<span>{{ title }}</span>
 	<input
 		[id]="id"
 		[type]="type"
 		class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow transition-all outline-none"
 		[placeholder]="placeholder"
-		[formControlName]="inputFormControlName"
-/></label>
+		[formControlName]="inFormControlName"
+	/>
+</label>

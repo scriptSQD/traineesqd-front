@@ -1,9 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, Validators } from "@angular/forms";
 import { Select, Store } from "@ngxs/store";
-import { Observable } from "rxjs";
+import { Observable, of, switchMap, tap } from "rxjs";
+import { AuthService } from "src/app/auth/auth.service";
+import { CloudTodos } from "./actions/cloud-todos-ngxs.actions";
 import { Todos } from "./actions/todos-ngxs.actions";
 import { ITodo } from "./interfaces/todos.interface";
+import { TodosNgxsService } from "./services/todos-ngxs.service";
+import { CloudTodosState } from "./states/cloud-todos.state";
+import { TodosState } from "./states/todos.state";
 
 @Component({
 	selector: "app-todos-ngxs",
@@ -12,44 +17,71 @@ import { ITodo } from "./interfaces/todos.interface";
 })
 export class TodosNgxsComponent implements OnInit {
 	todoForm = this.fb.nonNullable.group({
-		title: new FormControl<string>("", {
+		title: this.fb.control<string>("", {
 			validators: Validators.required,
 		}),
-		completed: new FormControl<boolean>(false, {
+		completed: this.fb.control<boolean>(false, {
 			validators: Validators.required,
 		}),
 	});
 
-	@Select() todos$?: Observable<ITodo[]>;
+	@Select(TodosState) todos$?: Observable<ITodo[]>;
+	@Select(CloudTodosState) cloudTodos$?: Observable<ITodo[]>;
 
 	constructor(
 		private readonly fb: FormBuilder,
-		private readonly store: Store
-	) {}
+		private readonly store: Store,
+		private readonly todosService: TodosNgxsService,
+		private readonly authService: AuthService
+	) {
+		this.authService.isAuth$
+			.pipe(
+				switchMap(isAuth => {
+					if (!isAuth) return of(undefined);
+
+					return this.todosService.getAll();
+				}),
+				tap(cloudTodos => {
+					if (cloudTodos)
+						this.store.dispatch(new CloudTodos.AddMany(cloudTodos));
+				})
+			)
+			.subscribe();
+	}
 
 	ngOnInit(): void {}
 
-	addTodo(): void {
-		this.store.dispatch(
-			new Todos.Add({
-				title: this.todoForm.controls.title.value!,
-				completed: false,
-			})
-		);
+	addTodo(submitter: HTMLButtonElement): void {
+		const isCloud = submitter.id === "cloud" || false;
+
+		const newTodo = {
+			title: this.todoForm.controls.title.value!,
+			completed: false,
+		};
+
+		if (!isCloud) this.store.dispatch(new Todos.Add(newTodo));
+		else this.store.dispatch(new CloudTodos.Add(newTodo));
 
 		this.todoForm.controls.title.reset();
 	}
 
-	toggleTodoComplete(todo: ITodo, completed: boolean): void {
+	toggleTodoComplete(
+		todo: ITodo,
+		completed: boolean,
+		isCloud: boolean
+	): void {
 		const updatedTodo = {
 			...todo,
 			completed: completed,
 		};
 
-		this.store.dispatch(new Todos.Update(todo, updatedTodo));
+		if (!isCloud)
+			this.store.dispatch(new Todos.Update(todo._id!, updatedTodo));
+		else this.store.dispatch(new CloudTodos.Update(todo._id!, updatedTodo));
 	}
 
-	removeTodo(id: string): void {
-		this.store.dispatch(new Todos.Remove(id));
+	removeTodo(id: string, isCloud: boolean): void {
+		if (!isCloud) this.store.dispatch(new Todos.Remove(id));
+		else this.store.dispatch(new CloudTodos.Remove(id));
 	}
 }

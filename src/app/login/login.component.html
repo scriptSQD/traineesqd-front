@@ -33,24 +33,19 @@
 				characters long!
 			</p>
 		</label>
-		<label for="password" class="w-full">
-			<span>Password</span>
-			<input
-				type="password"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow disabled:bg-zinc-300 disabled:cursor-not-allowed transition-all"
-				placeholder="Password"
-				formControlName="password"
-			/>
-		</label>
-		<label for="totp" class="w-full" *ngIf="needsTotp">
-			<span>TOTP Code</span>
-			<input
-				type="text"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
-				placeholder="TOTP Code"
-				formControlName="totp"
-			/>
-		</label>
+
+		<app-input
+			inFormControlName="password"
+			placeholder="Password"
+			type="password"
+		></app-input>
+
+		<app-input
+			inFormControlName="totp"
+			placeholder="TOTP Code"
+			*ngIf="needsTotp"
+		></app-input>
+
 		<button
 			type="submit"
 			class="submit_button"
@@ -64,12 +59,6 @@
 	</p>
 </form>
 
-<span
+<app-loading-indicator
 	*ngIf="loginSubmissionInProcess | async"
-	class="flex gap-2 items-center justify-center"
->
-	<div
-		class="w-8 h-8 bg-transparent border-4 border-gray-300 border-t-gray-800 animate-spin rounded-full"
-	></div>
-	Processing login...
-</span>
+></app-loading-indicator>

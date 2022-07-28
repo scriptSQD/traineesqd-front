@@ -19,7 +19,10 @@ import { TSQDTitleStrategy } from "./title.strategy";
 import { UtilsComponent } from "./utils/utils.component";
 import { TodosNgxsComponent } from "./utils/components/todos-ngxs/todos-ngxs.component";
 import { NgxsModule } from "@ngxs/store";
-import { TodosState } from "./utils/components/todos-ngxs/states/todos.state";
+import {
+	TodosState,
+	TODOS_STATE_TOKEN,
+} from "./utils/components/todos-ngxs/states/todos.state";
 import { InputComponent } from "./components/input/input.component";
 import { ButtonComponent } from "./components/button/button.component";
 
@@ -29,6 +32,7 @@ import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
 import { environment } from "src/environments/environment";
 import { TodoCardComponent } from "./utils/components/todos-ngxs/components/todo-card/todo-card.component";
 import { AuthInterceptor } from "./utils/interceptors/auth-interceptor.interceptor";
+import { CloudTodosState } from "./utils/components/todos-ngxs/states/cloud-todos.state";
 
 @NgModule({
 	declarations: [
@@ -52,9 +56,9 @@ import { AuthInterceptor } from "./utils/interceptors/auth-interceptor.intercept
 		ReactiveFormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
-		NgxsModule.forRoot([TodosState]),
+		NgxsModule.forRoot([TodosState, CloudTodosState]),
 		NgxsStoragePluginModule.forRoot({
-			key: ["todos"],
+			key: [TODOS_STATE_TOKEN.getName()],
 		}),
 		NgxsReduxDevtoolsPluginModule.forRoot({
 			disabled: environment.production,

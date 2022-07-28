@@ -1,0 +1,12 @@
+:host {
+	display: block;
+	width: 100%;
+}
+
+label > span {
+	@apply text-gray-700 font-medium;
+}
+
+input {
+	@apply mb-2 last:mb-0 focus-visible:shadow-md focus-visible:shadow-indigo-100 focus-visible:outline-none;
+}

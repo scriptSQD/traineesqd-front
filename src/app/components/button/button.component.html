@@ -1,7 +1,8 @@
 <button
 	[type]="type"
-	class="submit_button border border-neutral-400 w-fit shadow-md hover:shadow"
-	[disabled]="disabledCondition"
+	class="submit_button"
+	[disabled]="isDisabled"
+	[id]="customId"
 >
 	<ng-container *ngIf="children">
 		<ng-template

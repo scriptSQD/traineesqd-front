@@ -18,7 +18,7 @@ export class TodosState {
 	addTodo(ctx: StateContext<ITodo[]>, action: Todos.Add): void {
 		const payload: ITodo = {
 			...action.payload,
-			id: uid(),
+			_id: uid(),
 		};
 
 		ctx.setState([...(ctx.getState() || []), payload]);
@@ -27,7 +27,7 @@ export class TodosState {
 	@Action(Todos.Update)
 	updateTodo(ctx: StateContext<ITodo[]>, action: Todos.Update): void {
 		const updatedState = ctx.getState().map(todo => {
-			if (todo.id === action.payload.id) todo = action.withValue;
+			if (todo._id === action.target) todo = action.withValue;
 
 			return todo;
 		});
@@ -39,7 +39,7 @@ export class TodosState {
 	removeTodo(ctx: StateContext<ITodo[]>, action: Todos.Remove): void {
 		const updatedState = ctx
 			.getState()
-			.filter(todo => todo.id !== action.id);
+			.filter(todo => todo._id !== action.id);
 
 		ctx.setState(updatedState);
 	}

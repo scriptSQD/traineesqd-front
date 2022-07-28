@@ -46,7 +46,7 @@
 		</div>
 		<app-loading-indicator
 			placeholder="Loading latest commit..."
-			[loaderCondition]="latestCommitLoading | async"
+			*ngIf="latestCommitLoading | async"
 			class="my-2 mx-0"
 		></app-loading-indicator>
 	</div>

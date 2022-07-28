@@ -1,6 +1,6 @@
 <form
 	[formGroup]="todoForm"
-	(ngSubmit)="addTodo()"
+	(ngSubmit)="addTodo($event.submitter)"
 	class="prose flex flex-col gap-3 items-center"
 >
 	<div class="flex flex-col gap-2">
@@ -11,16 +11,25 @@
 			web!
 		</p>
 	</div>
-	<ui-input
+	<app-input
 		placeholder="Todo title"
-		inputFormControlName="title"
+		inFormControlName="title"
 		id="todoTitle"
 		title="Title"
-	></ui-input>
+	></app-input>
 
-	<ui-button type="submit" [disabledCondition]="!todoForm.valid">
-		<ng-template #content>Add todo!</ng-template>
-	</ui-button>
+	<span class="flex gap-2 flex-wrap">
+		<app-button type="submit" [isDisabled]="!todoForm.valid">
+			<ng-template #content>Add todo!</ng-template>
+		</app-button>
+		<app-button
+			type="submit"
+			[isDisabled]="!todoForm.valid"
+			customId="cloud"
+		>
+			<ng-template #content>Add to cloud!</ng-template>
+		</app-button>
+	</span>
 
 	<div class="flex flex-col mt-5 gap-2">
 		<h1 class="text-center my-0">Todos list:</h1>
@@ -33,15 +42,35 @@
 		<ul class="flex flex-col">
 			<ng-container *ngIf="todos$ | async as todosSync">
 				<ng-container *ngIf="todosSync.length !== 0">
-					<h2 class="text-center my-0">Your todos:</h2>
+					<h2 class="text-center my-0">Your local todos:</h2>
 					<li class="my-4" *ngFor="let todo of todosSync">
 						<app-todo-card
 							[todo]="todo"
-							(triggerRemoveTodo)="removeTodo($event)"
+							(triggerRemoveTodo)="removeTodo($event, false)"
 							(triggerTodoCompleteStatus)="
 								toggleTodoComplete(
 									$event.todo,
-									$event.completed
+									$event.completed,
+									false
+								)
+							"
+						></app-todo-card>
+					</li>
+				</ng-container>
+			</ng-container>
+
+			<ng-container *ngIf="cloudTodos$ | async as cloudTodos">
+				<ng-container *ngIf="cloudTodos.length !== 0">
+					<h2 class="text-center my-0">Your cloud todos:</h2>
+					<li class="my-4" *ngFor="let todo of cloudTodos">
+						<app-todo-card
+							[todo]="todo"
+							(triggerRemoveTodo)="removeTodo($event, true)"
+							(triggerTodoCompleteStatus)="
+								toggleTodoComplete(
+									$event.todo,
+									$event.completed,
+									true
 								)
 							"
 						></app-todo-card>
