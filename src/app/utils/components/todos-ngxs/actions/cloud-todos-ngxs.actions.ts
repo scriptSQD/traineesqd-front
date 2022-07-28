@@ -6,14 +6,14 @@ export namespace CloudTodos {
 		constructor(public payload: ITodo) {}
 	}
 
-	export class AddMany {
+	export class InitFromCloud {
 		static readonly type = "[CloudTodo] Add many";
 		constructor(public payload: ITodo[]) {}
 	}
 
 	export class Update {
 		static readonly type = "[CloudTodo] Update";
-		constructor(public target: string, public withValue: ITodo) {}
+		constructor(public target: string, public withValue: Partial<ITodo>) {}
 	}
 
 	export class Remove {

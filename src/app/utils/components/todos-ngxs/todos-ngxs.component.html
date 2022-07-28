@@ -50,7 +50,7 @@
 							(triggerRemoveTodo)="removeTodo($event, false)"
 							(triggerTodoCompleteStatus)="
 								toggleTodoComplete(
-									$event.todo,
+									$event.id,
 									$event.completed,
 									false
 								)
@@ -69,7 +69,7 @@
 							(triggerRemoveTodo)="removeTodo($event, true)"
 							(triggerTodoCompleteStatus)="
 								toggleTodoComplete(
-									$event.todo,
+									$event.id,
 									$event.completed,
 									true
 								)

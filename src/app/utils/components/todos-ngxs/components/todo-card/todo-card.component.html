@@ -27,10 +27,11 @@
 		<label class="flex gap-2 my-0 w-fit">
 			Completed:
 			<input
+				[id]="todo._id"
 				type="checkbox"
 				[checked]="todo.completed"
 				class="rounded-lg shadow border border-neutral-300"
-				(click)="toggleTodoComplete(todo, self.checked)"
+				(click)="toggleTodoComplete(self.id, self.checked)"
 				#self
 			/>
 		</label>

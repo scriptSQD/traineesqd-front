@@ -8,7 +8,7 @@ export namespace Todos {
 
 	export class Update {
 		static readonly type = "[Todo] Update";
-		constructor(public target: string, public withValue: ITodo) {}
+		constructor(public target: string, public withValue: Partial<ITodo>) {}
 	}
 
 	export class Remove {

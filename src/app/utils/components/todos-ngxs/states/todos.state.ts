@@ -27,7 +27,8 @@ export class TodosState {
 	@Action(Todos.Update)
 	updateTodo(ctx: StateContext<ITodo[]>, action: Todos.Update): void {
 		const updatedState = ctx.getState().map(todo => {
-			if (todo._id === action.target) todo = action.withValue;
+			if (todo._id === action.target)
+				todo = { ...todo, ...action.withValue };
 
 			return todo;
 		});

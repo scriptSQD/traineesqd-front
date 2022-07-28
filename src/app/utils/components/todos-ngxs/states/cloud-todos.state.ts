@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Action, State, StateContext, StateToken } from "@ngxs/store";
 import { tap } from "rxjs";
@@ -15,6 +16,23 @@ export const CLOUD_TODOS_STATE_TOKEN = new StateToken<string>("cloudTodos");
 export class CloudTodosState {
 	constructor(private readonly todosService: TodosNgxsService) {}
 
+	refreshOnError(ctx: StateContext<ITodo[]>): void {
+		// Refresh current list
+		this.todosService
+			.getAll()
+			.pipe(
+				tap(resp => {
+					if (!resp) ctx.setState([]);
+					else ctx.setState(resp);
+
+					throw new HttpErrorResponse({
+						error: "Failed to modify cloud todos.",
+					});
+				})
+			)
+			.subscribe();
+	}
+
 	@Action(CloudTodos.Add)
 	addTodo(ctx: StateContext<ITodo[]>, action: CloudTodos.Add): void {
 		this.todosService
@@ -22,33 +40,31 @@ export class CloudTodosState {
 			.pipe(
 				tap({
 					next: resp => {
-						if (!resp) throw new Error("Failed to add todo.");
+						if (!resp) this.refreshOnError(ctx);
 
-						ctx.setState([
-							...(ctx.getState() || []),
-							action.payload,
-						]);
+						ctx.setState([...(ctx.getState() || []), resp]);
 					},
 					error: () => {
-						throw new Error("Failed to add todo.");
+						this.refreshOnError(ctx);
 					},
 				})
 			)
 			.subscribe();
 	}
 
-	@Action(CloudTodos.AddMany)
-	addManyToStore(
+	@Action(CloudTodos.InitFromCloud)
+	initFromCloud(
 		ctx: StateContext<ITodo[]>,
-		action: CloudTodos.AddMany
+		action: CloudTodos.InitFromCloud
 	): void {
-		ctx.setState([...(ctx.getState() || []), ...action.payload]);
+		ctx.setState(action.payload);
 	}
 
 	@Action(CloudTodos.Update)
 	updateTodo(ctx: StateContext<ITodo[]>, action: CloudTodos.Update): void {
 		const updatedState = ctx.getState().map(todo => {
-			if (todo._id === action.target) todo = action.withValue;
+			if (todo._id === action.target)
+				todo = { ...todo, ...action.withValue };
 
 			return todo;
 		});
@@ -58,12 +74,12 @@ export class CloudTodosState {
 			.pipe(
 				tap({
 					next: resp => {
-						if (!resp) throw new Error("Failed to update todo.");
+						if (!resp) this.refreshOnError(ctx);
 
 						ctx.setState(updatedState);
 					},
 					error: () => {
-						throw new Error("Failed to update todo.");
+						this.refreshOnError(ctx);
 					},
 				})
 			)
@@ -81,12 +97,12 @@ export class CloudTodosState {
 			.pipe(
 				tap({
 					next: resp => {
-						if (!resp) throw new Error("Failed to remove todo.");
+						if (!resp) this.refreshOnError(ctx);
 
 						ctx.setState(updatedState);
 					},
 					error: () => {
-						throw new Error("Failed to remove todo.");
+						this.refreshOnError(ctx);
 					},
 				})
 			)

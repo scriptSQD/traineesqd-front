@@ -43,7 +43,9 @@ export class TodosNgxsComponent implements OnInit {
 				}),
 				tap(cloudTodos => {
 					if (cloudTodos)
-						this.store.dispatch(new CloudTodos.AddMany(cloudTodos));
+						this.store.dispatch(
+							new CloudTodos.InitFromCloud(cloudTodos)
+						);
 				})
 			)
 			.subscribe();
@@ -65,19 +67,9 @@ export class TodosNgxsComponent implements OnInit {
 		this.todoForm.controls.title.reset();
 	}
 
-	toggleTodoComplete(
-		todo: ITodo,
-		completed: boolean,
-		isCloud: boolean
-	): void {
-		const updatedTodo = {
-			...todo,
-			completed: completed,
-		};
-
-		if (!isCloud)
-			this.store.dispatch(new Todos.Update(todo._id!, updatedTodo));
-		else this.store.dispatch(new CloudTodos.Update(todo._id!, updatedTodo));
+	toggleTodoComplete(id: string, completed: boolean, isCloud: boolean): void {
+		if (!isCloud) this.store.dispatch(new Todos.Update(id, { completed }));
+		else this.store.dispatch(new CloudTodos.Update(id, { completed }));
 	}
 
 	removeTodo(id: string, isCloud: boolean): void {

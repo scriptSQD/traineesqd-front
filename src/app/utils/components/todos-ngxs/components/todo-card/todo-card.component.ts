@@ -21,7 +21,7 @@ export class TodoCardComponent {
 	triggerRemoveTodo = new EventEmitter<string>();
 	@Output()
 	triggerTodoCompleteStatus = new EventEmitter<{
-		todo: ITodo;
+		id: string;
 		completed: boolean;
 	}>();
 
@@ -31,7 +31,7 @@ export class TodoCardComponent {
 		this.triggerRemoveTodo.emit(id);
 	}
 
-	toggleTodoComplete(todo: ITodo, completed: boolean) {
-		this.triggerTodoCompleteStatus.emit({ todo, completed });
+	toggleTodoComplete(id: string, completed: boolean) {
+		this.triggerTodoCompleteStatus.emit({ id, completed });
 	}
 }

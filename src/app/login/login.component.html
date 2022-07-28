@@ -57,8 +57,8 @@
 	<p *ngIf="loginErrors" class="my-1 text-rose-600 text-center max-w-[32ch]">
 		{{ loginErrors.message }}
 	</p>
+	<app-loading-indicator
+		*ngIf="loginSubmissionInProcess | async"
+		placeholder="Logging in..."
+	></app-loading-indicator>
 </form>
-
-<app-loading-indicator
-	*ngIf="loginSubmissionInProcess | async"
-></app-loading-indicator>
