@@ -26,6 +26,7 @@
 			type="submit"
 			[isDisabled]="!todoForm.valid"
 			customId="cloud"
+			*ngIf="authService.isAuth$ | async"
 		>
 			<ng-template #content>Add to cloud!</ng-template>
 		</app-button>

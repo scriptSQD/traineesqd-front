@@ -32,7 +32,7 @@ export class TodosNgxsComponent implements OnInit {
 		private readonly fb: FormBuilder,
 		private readonly store: Store,
 		private readonly todosService: TodosNgxsService,
-		private readonly authService: AuthService
+		public readonly authService: AuthService
 	) {
 		this.authService.isAuth$
 			.pipe(
