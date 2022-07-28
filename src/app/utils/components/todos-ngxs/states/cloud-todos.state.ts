@@ -108,4 +108,9 @@ export class CloudTodosState {
 			)
 			.subscribe();
 	}
+
+	@Action(CloudTodos.RemoveAll)
+	removeAll(ctx: StateContext<ITodo[]>): void {
+		ctx.setState([]);
+	}
 }

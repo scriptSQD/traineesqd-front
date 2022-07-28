@@ -60,9 +60,7 @@ import { CloudTodosState } from "./utils/components/todos-ngxs/states/cloud-todo
 		NgxsStoragePluginModule.forRoot({
 			key: [TODOS_STATE_TOKEN.getName()],
 		}),
-		NgxsReduxDevtoolsPluginModule.forRoot({
-			disabled: environment.production,
-		}),
+		NgxsReduxDevtoolsPluginModule.forRoot(),
 		NgxsLoggerPluginModule.forRoot({
 			disabled: environment.production,
 		}),

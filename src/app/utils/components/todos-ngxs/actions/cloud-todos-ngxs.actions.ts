@@ -20,4 +20,9 @@ export namespace CloudTodos {
 		static readonly type = "[CloudTodo] Remove";
 		constructor(public id: string) {}
 	}
+
+	export class RemoveAll {
+		static readonly type = "[CloudTodo] Remove all";
+		constructor() {}
+	}
 }

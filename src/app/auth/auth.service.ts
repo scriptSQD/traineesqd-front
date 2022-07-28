@@ -4,8 +4,10 @@ import {
 	HttpErrorResponse,
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Store } from "@ngxs/store";
 import { catchError, Observable, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
+import { CloudTodos } from "../utils/components/todos-ngxs/actions/cloud-todos-ngxs.actions";
 import { withoutAuthContext } from "../utils/constants";
 import { ILogin, IRegister } from "./interfaces/auth.interface";
 import { IUser, User } from "./models/user.model";
@@ -32,7 +34,10 @@ export class AuthService {
 	// resolve circular dependency
 	http = new HttpClient(this.httpBackend);
 
-	constructor(private readonly httpBackend: HttpBackend) {
+	constructor(
+		private readonly httpBackend: HttpBackend,
+		private readonly store: Store
+	) {
 		if (!this.jwt) {
 			this.isAuth$.next(false);
 			return;
@@ -109,5 +114,6 @@ export class AuthService {
 		this.jwt = null;
 		this.isAuth$.next(false);
 		this.user$.next(null);
+		this.store.dispatch(new CloudTodos.RemoveAll());
 	}
 }
