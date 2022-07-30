@@ -25,4 +25,9 @@ export namespace CloudTodos {
 		static readonly type = "[CloudTodo] Remove all";
 		constructor() {}
 	}
+
+	export class Refresh {
+		static readonly type = "[CloudTodo] Sync with cloud";
+		constructor() {}
+	}
 }

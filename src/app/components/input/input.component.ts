@@ -1,4 +1,11 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+	Component,
+	ContentChildren,
+	Input,
+	OnInit,
+	QueryList,
+	TemplateRef,
+} from "@angular/core";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 
 @Component({
@@ -10,6 +17,10 @@ import { ControlContainer, FormGroupDirective } from "@angular/forms";
 	],
 })
 export class InputComponent implements OnInit {
+	@ContentChildren("validator") validators?: QueryList<
+		TemplateRef<HTMLElement>
+	>;
+
 	@Input() inFormControlName!: string;
 
 	@Input() id?: string;

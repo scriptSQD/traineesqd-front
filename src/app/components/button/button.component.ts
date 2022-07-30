@@ -1,7 +1,9 @@
 import {
 	Component,
 	ContentChildren,
+	EventEmitter,
 	Input,
+	Output,
 	QueryList,
 	TemplateRef,
 } from "@angular/core";
@@ -20,4 +22,10 @@ export class ButtonComponent {
 	@Input() customId?: string;
 
 	@Input() content?: string;
+
+	@Output() click = new EventEmitter<MouseEvent>();
+
+	emitClick(e: MouseEvent): void {
+		this.click.emit(e);
+	}
 }

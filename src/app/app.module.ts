@@ -33,6 +33,8 @@ import { environment } from "src/environments/environment";
 import { TodoCardComponent } from "./utils/components/todos-ngxs/components/todo-card/todo-card.component";
 import { AuthInterceptor } from "./utils/interceptors/auth-interceptor.interceptor";
 import { CloudTodosState } from "./utils/components/todos-ngxs/states/cloud-todos.state";
+import { CacheInterceptor } from "./utils/interceptors/cache-interceptor.interceptor";
+import { HttpCacheState } from "./states/http-cache.state";
 
 @NgModule({
 	declarations: [
@@ -56,7 +58,7 @@ import { CloudTodosState } from "./utils/components/todos-ngxs/states/cloud-todo
 		ReactiveFormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
-		NgxsModule.forRoot([TodosState, CloudTodosState]),
+		NgxsModule.forRoot([TodosState, CloudTodosState, HttpCacheState]),
 		NgxsStoragePluginModule.forRoot({
 			key: [TODOS_STATE_TOKEN.getName()],
 		}),
@@ -68,6 +70,7 @@ import { CloudTodosState } from "./utils/components/todos-ngxs/states/cloud-todo
 	providers: [
 		{ provide: TitleStrategy, useClass: TSQDTitleStrategy },
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
 	],
 	bootstrap: [AppComponent],
 })

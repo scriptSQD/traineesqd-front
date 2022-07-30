@@ -3,6 +3,7 @@
 	class="submit_button"
 	[disabled]="isDisabled"
 	[id]="customId"
+	(click)="emitClick($event)"
 >
 	<ng-container *ngIf="children">
 		<ng-template

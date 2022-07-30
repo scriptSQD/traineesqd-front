@@ -11,61 +11,53 @@
 				registered and have access to all features!
 			</p>
 		</div>
-		<label for="username" *ngIf="regForm.controls['username'] as username">
-			<span>Username</span>
-			<input
-				type="text"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
-				placeholder="AwesomeUsername"
-				formControlName="username"
-			/>
 
-			<app-form-validation-handler
-				[control]="username"
-				validationError="minlength"
-				errorMsg="Username must be at least 6 characters long."
-			></app-form-validation-handler>
-			<app-form-validation-handler
-				[control]="username"
-				validationError="uniqueValueAlreadyTaken"
-				errorMsg="Username already taken!"
-			></app-form-validation-handler>
+		<app-input
+			*ngIf="regForm.controls['username'] as username"
+			title="Username"
+			placeholder="AwesomeUsername"
+			inFormControlName="username"
+		>
+			<ng-template #validator>
+				<app-form-validation-handler
+					[control]="username"
+					validationError="minlength"
+					errorMsg="Username must be at least 6 characters long."
+				></app-form-validation-handler>
+			</ng-template>
+			<ng-template #validator>
+				<app-form-validation-handler
+					[control]="username"
+					validationError="uniqueValueAlreadyTaken"
+					errorMsg="Username already taken!"
+				></app-form-validation-handler>
+			</ng-template>
+			<ng-template #validator>
+				<app-loading-indicator
+					*ngIf="username.getError('validatingUniqueness')"
+				></app-loading-indicator>
+			</ng-template>
+		</app-input>
 
-			<app-loading-indicator
-				*ngIf="username.getError('validatingUniqueness')"
-			></app-loading-indicator>
-		</label>
-		<label for="email" *ngIf="regForm.controls['email'] as email">
-			<span>Email</span>
-			<input
-				type="email"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
-				placeholder="urmail@domain.ex"
-				formControlName="email"
-			/>
-
-			<app-form-validation-handler
-				[control]="email"
-				validationError="email"
-			></app-form-validation-handler>
-			<app-form-validation-handler
-				[control]="email"
-				validationError="uniqueValueAlreadyTaken"
-				errorMsg="Email already taken!"
-			>
-			</app-form-validation-handler>
-		</label>
+		<app-input
+			*ngIf="regForm.controls['email'] as email"
+			title="Email"
+			placeholder="urmail@domain.ex"
+			inFormControlName="email"
+		>
+			<ng-template #validator></ng-template>
+		</app-input>
 		<label for="password" class="flex flex-col">
 			<span>Password</span>
 			<input
 				type="password"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow outline-none focus-visible:outline-none"
 				placeholder="Password"
 				formControlName="password"
 			/>
 			<input
 				type="password"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
+				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow outline-none focus-visible:outline-none"
 				placeholder="Confirm password"
 				formControlName="passConfirm"
 			/>
@@ -77,6 +69,7 @@
 				Passwords do not match!
 			</p>
 		</label>
+
 		<button type="submit" class="submit_button" [disabled]="!regForm.valid">
 			Register!
 		</button>

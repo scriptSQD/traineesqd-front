@@ -12,37 +12,35 @@
 			</p>
 		</div>
 
-		<label
-			for="username"
-			class="w-full"
+		<app-input
 			*ngIf="loginForm.controls['username'] as username"
+			title="Username"
+			placeholder="AwesomeUsername"
+			inFormControlName="username"
 		>
-			<span>Username</span>
-			<input
-				type="text"
-				class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow disabled:bg-zinc-300 disabled:cursor-not-allowed transition-all"
-				placeholder="AwesomeUsername"
-				formControlName="username"
-			/>
-			<p
-				*ngIf="username.getError('minlength') && username.dirty"
-				class="not-prose text-sm font-light m-0 text-rose-600"
-			>
-				Username must be at least
-				{{ username.getError("minlength")?.requiredLength || "6" }}
-				characters long!
-			</p>
-		</label>
+			<ng-template #validator>
+				<p
+					*ngIf="username.getError('minlength') && username.dirty"
+					class="not-prose text-sm font-light m-0 text-rose-600"
+				>
+					Username must be at least
+					{{ username.getError("minlength")?.requiredLength || "6" }}
+					characters long!
+				</p>
+			</ng-template>
+		</app-input>
 
 		<app-input
 			inFormControlName="password"
+			title="Password"
 			placeholder="Password"
 			type="password"
 		></app-input>
 
 		<app-input
 			inFormControlName="totp"
-			placeholder="TOTP Code"
+			title="TOTP Code"
+			placeholder="123456"
 			*ngIf="needsTotp"
 		></app-input>
 

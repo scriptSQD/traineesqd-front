@@ -3,8 +3,15 @@
 	<input
 		[id]="id"
 		[type]="type"
-		class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow transition-all outline-none"
+		class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow transition-all outline-none disabled:bg-zinc-300 disabled:cursor-not-allowed"
 		[placeholder]="placeholder"
 		[formControlName]="inFormControlName"
 	/>
+
+	<ng-container *ngIf="validators">
+		<ng-template
+			*ngFor="let validator of validators"
+			[ngTemplateOutlet]="validator"
+		></ng-template>
+	</ng-container>
 </label>

@@ -76,4 +76,8 @@ export class TodosNgxsComponent implements OnInit {
 		if (!isCloud) this.store.dispatch(new Todos.Remove(id));
 		else this.store.dispatch(new CloudTodos.Remove(id));
 	}
+
+	refreshTodos(): void {
+		this.store.dispatch(new CloudTodos.Refresh());
+	}
 }

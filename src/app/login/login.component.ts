@@ -19,7 +19,11 @@ export class LoginComponent implements OnInit {
 			validators: Validators.required,
 		}),
 		totp: this.fb.control<string | null>(null, {
-			validators: [Validators.pattern(/^[0-9]{6}$/)],
+			validators: [
+				Validators.pattern(/^[0-9]{6}$/),
+				Validators.minLength(6),
+				Validators.maxLength(6),
+			],
 		}),
 	});
 

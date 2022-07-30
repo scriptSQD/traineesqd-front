@@ -7,6 +7,11 @@ export const constants = {
 
 // Http interceptor context to provide auth headers
 export const withAuth = new HttpContextToken<boolean>(() => true);
+export const withCache = new HttpContextToken<boolean>(() => false);
+
 export function withoutAuthContext() {
 	return new HttpContext().set(withAuth, false);
+}
+export function withCacheContext() {
+	return new HttpContext().set(withCache, true);
 }

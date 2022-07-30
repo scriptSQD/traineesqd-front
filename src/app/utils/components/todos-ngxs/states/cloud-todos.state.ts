@@ -16,6 +16,19 @@ export const CLOUD_TODOS_STATE_TOKEN = new StateToken<string>("cloudTodos");
 export class CloudTodosState {
 	constructor(private readonly todosService: TodosNgxsService) {}
 
+	@Action(CloudTodos.Refresh)
+	refresh(ctx: StateContext<ITodo[]>): void {
+		this.todosService
+			.getAll()
+			.pipe(
+				tap(resp => {
+					if (!resp) ctx.setState([]);
+					else ctx.setState(resp);
+				})
+			)
+			.subscribe();
+	}
+
 	refreshOnError(ctx: StateContext<ITodo[]>): void {
 		// Refresh current list
 		this.todosService
