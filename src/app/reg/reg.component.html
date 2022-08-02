@@ -45,7 +45,13 @@
 			placeholder="urmail@domain.ex"
 			inFormControlName="email"
 		>
-			<ng-template #validator></ng-template>
+			<ng-template #validator>
+				<app-form-validation-handler
+					[control]="email"
+					validationError="uniqueValueAlreadyTaken"
+					errorMsg="Email already taken!"
+				></app-form-validation-handler>
+			</ng-template>
 		</app-input>
 		<label for="password" class="flex flex-col">
 			<span>Password</span>
