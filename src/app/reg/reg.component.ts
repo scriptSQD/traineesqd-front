@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { ReplaySubject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { AuthService } from "../auth/auth.service";
-import { FormControlsMatch, validateUnique } from "./reg-custom.validator";
+import { controlsMatch, validateUnique } from "./reg-custom.validator";
 
 enum UsernameAvailabilityStatus {
 	UNAVAILABLE = 0,
@@ -47,7 +47,7 @@ export class RegComponent implements OnInit {
 			}),
 		},
 		{
-			validators: FormControlsMatch("password", "passConfirm", {
+			validators: controlsMatch("password", "passConfirm", {
 				passwordsMismatch: true,
 			}),
 		}

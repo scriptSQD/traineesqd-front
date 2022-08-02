@@ -69,16 +69,20 @@
 				[formGroup]="totpForm"
 				(ngSubmit)="totpSubmitted()"
 			>
-				<label for="totp">
-					TOTP Code
-					<input
-						id="totp"
-						type="text"
-						placeholder="TOTP Code"
-						class="border border-neutral-300 rounded-md w-full px-3 py-1.5 shadow"
-						formControlName="totpCode"
-					/>
-				</label>
+				<app-input
+					title="TOTP Code"
+					placeholder="TOTP Code"
+					id="totp"
+					inFormControlName="totpCode"
+				></app-input>
+
+				<p
+					*ngIf="regErrors"
+					class="text-center my-1 text-rose-600 font-medium"
+				>
+					{{ regErrors }}
+				</p>
+
 				<button
 					type="submit"
 					class="submit_button"
@@ -102,9 +106,6 @@
 			class="text-green-600 text-center my-1 font-medium"
 		>
 			2FA has been enabled! The page will now be refreshed.
-		</p>
-		<p *ngIf="regErrors" class="text-center my-1 text-rose-600 font-medium">
-			{{ regErrors }}
 		</p>
 	</details>
 </div>

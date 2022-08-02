@@ -62,7 +62,9 @@ import { HttpCacheState } from "./states/http-cache.state";
 		NgxsStoragePluginModule.forRoot({
 			key: [TODOS_STATE_TOKEN.getName()],
 		}),
-		NgxsReduxDevtoolsPluginModule.forRoot(),
+		NgxsReduxDevtoolsPluginModule.forRoot({
+			disabled: environment.production,
+		}),
 		NgxsLoggerPluginModule.forRoot({
 			disabled: environment.production,
 		}),

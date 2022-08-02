@@ -8,7 +8,7 @@ import {
 import { delay, map, of, switchMap } from "rxjs";
 import { withoutAuthContext } from "../utils/constants";
 
-export function FormControlsMatch(
+export function controlsMatch(
 	controlName: string,
 	matchingControlName: string,
 	error: ValidationErrors

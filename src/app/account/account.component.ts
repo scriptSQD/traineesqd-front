@@ -1,11 +1,11 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { map, of, ReplaySubject, switchMap } from "rxjs";
+import { catchError, map, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
 import { AuthService } from "../auth/auth.service";
 import * as CryptoJS from "crypto-js";
 import * as QRCode from "qrcode";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, Validators } from "@angular/forms";
 
 @Component({
 	selector: "app-account",
@@ -14,7 +14,7 @@ import { FormBuilder, FormControl, Validators } from "@angular/forms";
 })
 export class AccountComponent {
 	totpForm = this.fb.nonNullable.group({
-		totpCode: new FormControl<string>("", {
+		totpCode: this.fb.control<string>("", {
 			validators: [Validators.required, Validators.pattern(/^[0-9]{6}$/)],
 		}),
 	});
@@ -36,18 +36,20 @@ export class AccountComponent {
 		this.twoFaRegSuccess = undefined;
 
 		this.http
-			.post<boolean | HttpErrorResponse>(
-				`${environment.backend_url}/2fa/register`,
-				{
-					token: this.totpForm.controls.totpCode.value,
-				}
-			)
+			.post<boolean>(`${environment.backend_url}/2fa/register`, {
+				token: this.totpForm.controls.totpCode.value,
+			})
 			.pipe(
 				map(res => {
 					if (typeof res === "boolean") {
-						this.twoFaRegSuccess = true;
+						this.twoFaRegSuccess = res;
+						// TODO: Implement reactive user update
 						window.location.reload();
-					} else this.regErrors = res.message;
+					}
+				}),
+				catchError((err: HttpErrorResponse) => {
+					this.regErrors = err.error.message;
+					return of(undefined);
 				})
 			)
 			.subscribe();

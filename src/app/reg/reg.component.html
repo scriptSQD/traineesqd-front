@@ -52,6 +52,11 @@
 					errorMsg="Email already taken!"
 				></app-form-validation-handler>
 			</ng-template>
+			<ng-template #validator>
+				<app-loading-indicator
+					*ngIf="email.getError('validatingUniqueness')"
+				></app-loading-indicator>
+			</ng-template>
 		</app-input>
 		<label for="password" class="flex flex-col">
 			<span>Password</span>
