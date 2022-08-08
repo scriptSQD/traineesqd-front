@@ -11,7 +11,9 @@ import { withoutAuthContext } from "../utils/constants";
 export function controlsMatch(
 	controlName: string,
 	matchingControlName: string,
-	error: ValidationErrors
+	error: ValidationErrors = {
+		passwordsMismatch: true,
+	}
 ): ValidatorFn {
 	return (control: AbstractControl): ValidationErrors | null => {
 		const c1 = control.get(controlName);

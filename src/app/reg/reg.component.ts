@@ -47,9 +47,7 @@ export class RegComponent implements OnInit {
 			}),
 		},
 		{
-			validators: controlsMatch("password", "passConfirm", {
-				passwordsMismatch: true,
-			}),
+			validators: controlsMatch("password", "passConfirm"),
 		}
 	);
 
