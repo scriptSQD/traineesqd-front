@@ -9,7 +9,7 @@ import { catchError, Observable, of, ReplaySubject, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
 import { CloudTodos } from "../utils/components/todos-ngxs/actions/cloud-todos-ngxs.actions";
 import { withoutAuthContext } from "../utils/constants";
-import { ILogin, IRegister } from "./interfaces/auth.interface";
+import { IAuthResponse, ILogin, IRegister } from "./interfaces/auth.interface";
 import { IUser, User } from "./models/user.model";
 import {
 	clearLocalJwt,
@@ -62,7 +62,7 @@ export class AuthService {
 			});
 	}
 
-	login(payload: ILogin): Observable<HttpErrorResponse | null> {
+	login(payload: ILogin): Observable<IAuthResponse> {
 		return this.http
 			.post<JwtAuth>(
 				`${environment.backend_url}/auth/login`,
@@ -75,11 +75,13 @@ export class AuthService {
 			)
 			.pipe(
 				switchMap(res => {
-					this.jwt = updateLocalJwt(res.jwt);
-					this.user$.next(new User(res.user));
-					this.isAuth$.next(true);
+					if (res.user && res.jwt) {
+						this.jwt = updateLocalJwt(res.jwt);
+						this.user$.next(new User(res.user));
+						this.isAuth$.next(true);
+					}
 
-					return of(null);
+					return of(res);
 				}),
 				catchError(err => {
 					return of(err);

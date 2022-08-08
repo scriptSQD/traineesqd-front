@@ -35,6 +35,7 @@ import { AuthInterceptor } from "./utils/interceptors/auth-interceptor.intercept
 import { CloudTodosState } from "./utils/components/todos-ngxs/states/cloud-todos.state";
 import { CacheInterceptor } from "./utils/interceptors/cache-interceptor.interceptor";
 import { HttpCacheState } from "./states/http-cache.state";
+import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 
 @NgModule({
 	declarations: [
@@ -51,6 +52,7 @@ import { HttpCacheState } from "./states/http-cache.state";
 		InputComponent,
 		ButtonComponent,
 		TodoCardComponent,
+		ResetPasswordComponent,
 	],
 	imports: [
 		BrowserModule,

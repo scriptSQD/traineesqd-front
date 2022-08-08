@@ -7,6 +7,7 @@ import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
 import { LogoutComponent } from "./logout/logout.component";
 import { RegComponent } from "./reg/reg.component";
+import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 import { TodosNgxsComponent } from "./utils/components/todos-ngxs/todos-ngxs.component";
 import { UtilsComponent } from "./utils/utils.component";
 
@@ -41,6 +42,12 @@ const routes: Routes = [
 		component: AccountComponent,
 		canActivate: [WithAuthGuard],
 		title: "Account",
+	},
+	{
+		path: "resetPassword",
+		component: ResetPasswordComponent,
+		title: "Reset password",
+		canActivate: [WithoutAuthGuard],
 	},
 	{ path: "", pathMatch: "full", redirectTo: "/home" },
 ];
